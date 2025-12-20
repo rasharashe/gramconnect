@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+
+    <h2 class="mb-4">🏠 Homes</h2>
+
+    <div class="row g-4">
+
+        {% for home in homes %}
+        <div class="col-md-6 col-lg-4">
+
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+
+                    <!-- Home Name -->
+                    <h5 class="card-title">
+                        {{ home.house_name }}
+                    </h5>
+
+                    <!-- Owner -->
+                    <p class="text-muted mb-2" style="font-size: 14px;">
+                        Owner:
+                        {% for member in home.members.all %}
+                            {% if member.is_head %}
+                                <strong>{{ member.full_name }}</strong>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <hr>
+
+                    <!-- Members -->
+                    <p class="mb-1 fw-semibold">Members:</p>
+
+                    {% if home.members.all %}
+                        <ul class="list-group list-group-flush">
+                            {% for member in home.members.all %}
+                            <li class="list-group-item px-0 py-1 border-0">
+                                {{ member.full_name }}
+                                {% if member.is_head %}
+                                    <span class="badge bg-primary ms-2">Owner</span>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No members</p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
