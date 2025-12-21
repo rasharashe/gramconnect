@@ -56,7 +56,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['frontend/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,3 +119,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend" / "assets",
+]
+
+LOGIN_URL = '/signin/'
+
+LOGIN_REDIRECT_URL = '/home/'
+
+SESSION_COOKIE_AGE = 1200
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_SAVE_EVERY_REQUEST = True

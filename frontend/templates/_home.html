@@ -1,67 +1,185 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Homes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-
-<div class="container py-5">
-
-    <h2 class="mb-4">🏠 Homes</h2>
-
-    <div class="row g-4">
-
-        {% for home in homes %}
-        <div class="col-md-6 col-lg-4">
-
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-
-                    <!-- Home Name -->
-                    <h5 class="card-title">
-                        {{ home.house_name }}
-                    </h5>
-
-                    <!-- Owner -->
-                    <p class="text-muted mb-2" style="font-size: 14px;">
-                        Owner:
-                        {% for member in home.members.all %}
-                            {% if member.is_head %}
-                                <strong>{{ member.full_name }}</strong>
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-
-                    <hr>
-
-                    <!-- Members -->
-                    <p class="mb-1 fw-semibold">Members:</p>
-
-                    {% if home.members.all %}
-                        <ul class="list-group list-group-flush">
-                            {% for member in home.members.all %}
-                            <li class="list-group-item px-0 py-1 border-0">
-                                {{ member.full_name }}
-                                {% if member.is_head %}
-                                    <span class="badge bg-primary ms-2">Owner</span>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">No members</p>
-                    {% endif %}
-
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<div class="kt-container-fixed">
+        <!-- begin: projects -->
+        <div class="flex flex-col items-stretch gap-5 lg:gap-7.5">
+         <!-- begin: toolbar -->
+         <div class="flex flex-wrap items-center gap-5 justify-between">
+          <h3 class="text-lg text-mono font-semibold">
+            {{count}} house(s)
+          </h3>
+          <div class="kt-toggle-group" data-kt-tabs="true">
+           <a class="kt-btn kt-btn-icon active" data-kt-tab-toggle="#projects_cards" href="#">
+            <i class="ki-filled ki-category">
+            </i>
+           </a>
+           <a class="kt-btn kt-btn-icon" data-kt-tab-toggle="#projects_list" href="#">
+            <i class="ki-filled ki-row-horizontal">
+            </i>
+           </a>
+          </div>
+         </div>
+         <!-- end: toolbar -->
+         <!-- begin: cards -->
+         <div id="projects_cards">
+          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
+            {% for home in homes %}
+                <div class="kt-card p-7.5">
+                    
+                    <div class="flex flex-col mb-3 lg:mb-6">
+                    <a class="text-lg font-media/brand text-mono hover:text-primary mb-px" href="#">
+                    {{home.name}}
+                    </a>
+                    <span class="text-sm text-secondary-foreground">
+                    {{home.owner}}
+                    </span>
+                    </div>
+                    <div class="flex items-center gap-5 mb-3.5 lg:mb-7">
+                    <span class="text-sm text-secondary-foreground">
+                    Start:
+                    <span class="text-sm font-medium text-foreground">
+                    Mar 06
+                    </span>
+                    </span>
+                    <span class="text-sm text-secondary-foreground">
+                    End:
+                    <span class="text-sm font-medium text-foreground">
+                    Dec 21
+                    </span>
+                    </span>
+                    </div>
+                    <div class="kt-progress h-1.5 kt-progress-primary mb-4 lg:mb-8">
+                    <div class="kt-progress-indicator" style="width: 55%">
+                    </div>
+                    </div>
+                    <div class="flex -space-x-2">
+                    <div class="flex">
+                    <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-4.png' %}"/>
+                    </div>
+                    <div class="flex">
+                    <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-2.png' %}"/>
+                    </div>
+                    <div class="flex">
+                    <span class="hover:z-5 relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-[30px] text-primary-foreground ring-background bg-primary">
+                    S
+                    </span>
+                    </div>
+                    </div>
                 </div>
-            </div>
-
+            {% endfor %}
+          </div>
+         </div>
+         <!-- end: cards -->
+         <!-- begin: list -->
+         <div class="hidden" id="projects_list">
+          <div class="flex flex-col gap-5 lg:gap-7.5">
+            {% for home in homes %}
+                <div class="kt-card p-7">
+                    <div class="flex items-center flex-wrap justify-between gap-5">
+                    <div class="flex items-center gap-3.5">
+                    <div class="flex items-center justify-center size-14 shrink-0 rounded-lg bg-accent/60">
+                    <img alt="" class="" src="{% static 'media/brand-logos/plurk.svg' %}">
+                    </img>
+                    </div>
+                    <div class="flex flex-col">
+                    <a class="text-lg font-media/brand text-mono hover:text-primary mb-px" href="#">
+                        Phoenix SaaS
+                    </a>
+                    <span class="text-sm text-secondary-foreground">
+                        Real-time photo sharing app
+                    </span>
+                    </div>
+                    </div>
+                    <div class="flex items-center flex-wrap gap-5 lg:gap-20">
+                    <div class="flex items-center flex-wrap gap-5 lg:gap-14">
+                    <span class="kt-badge kt-badge-primary kt-badge-outline">
+                        In Progress
+                    </span>
+                    <div class="kt-progress h-1.5 w-36 kt-progress-primary">
+                        <div class="kt-progress-indicator" style="width: 55%">
+                        </div>
+                    </div>
+                    </div>
+                    <div class="flex items-center gap-5 lg:gap-14">
+                    <div class="flex justify-end w-24">
+                        <div class="flex -space-x-2">
+                        <div class="flex">
+                        <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-4.png' %}"/>
+                        </div>
+                        <div class="flex">
+                        <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-2.png' %}"/>
+                        </div>
+                        <div class="flex">
+                        <span class="hover:z-5 relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-[30px] text-primary-foreground ring-background bg-primary">
+                        S
+                        </span>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="kt-menu" data-kt-menu="true">
+                        <div class="kt-menu-item" data-kt-menu-item-offset="0, 10px" data-kt-menu-item-placement="bottom-end" data-kt-menu-item-toggle="dropdown" data-kt-menu-item-trigger="click">
+                        <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
+                        <i class="ki-filled ki-dots-vertical text-lg">
+                        </i>
+                        </button>
+                        <div class="kt-menu-dropdown kt-menu-default w-full max-w-[200px]" data-kt-menu-dismiss="true">
+                        <div class="kt-menu-item">
+                        <a class="kt-menu-link" href="html/demo8/account/home/settings-enterprise.html">
+                            <span class="kt-menu-icon">
+                            <i class="ki-filled ki-setting-3">
+                            </i>
+                            </span>
+                            <span class="kt-menu-title">
+                            Settings
+                            </span>
+                        </a>
+                        </div>
+                        <div class="kt-menu-item">
+                        <a class="kt-menu-link" href="html/demo8/account/members/import-members.html">
+                            <span class="kt-menu-icon">
+                            <i class="ki-filled ki-some-files">
+                            </i>
+                            </span>
+                            <span class="kt-menu-title">
+                            Import
+                            </span>
+                        </a>
+                        </div>
+                        <div class="kt-menu-item">
+                        <a class="kt-menu-link" href="html/demo8/account/activity.html">
+                            <span class="kt-menu-icon">
+                            <i class="ki-filled ki-cloud-change">
+                            </i>
+                            </span>
+                            <span class="kt-menu-title">
+                            Activity
+                            </span>
+                        </a>
+                        </div>
+                        <div class="kt-menu-item">
+                        <a class="kt-menu-link" data-kt-modal-toggle="#report_user_modal" href="#">
+                            <span class="kt-menu-icon">
+                            <i class="ki-filled ki-dislike">
+                            </i>
+                            </span>
+                            <span class="kt-menu-title">
+                            Report
+                            </span>
+                        </a>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+          </div>
+         </div>
+         <!-- end: list -->
         </div>
-        {% endfor %}
-
-    </div>
-
-</div>
-
-</body>
-</html>
+        <!-- end: projects -->
+       </div>
+{% endblock %}
