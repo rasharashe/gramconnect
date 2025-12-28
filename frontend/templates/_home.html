@@ -7,8 +7,26 @@
          <!-- begin: toolbar -->
          <div class="flex flex-wrap items-center gap-5 justify-between">
           <h3 class="text-lg text-mono font-semibold">
-            {{count}} house(s)
+            {{count}} houses
           </h3>
+          {% if request.user.is_superuser %}
+            <button class="kt-btn kt-btn-primary" data-kt-modal-toggle="#bulkmodal">
+            <i class="ki-filled ki-plus-circle mr-2">
+            </i>
+            New Home
+            </button>
+        {% endif %}
+          <div class="flex items-center grow rounded-lg">
+    <i class="ki-filled ki-magnifier text-muted-foreground text-xl">
+     </i>
+    <!-- <input 
+        id="home_search"
+        type="text" 
+        placeholder="Search houses..." 
+        class="bg-transparent border-none focus:ring-0 p-0 w-full text-sm font-medium text-gray-700" 
+    /> -->
+    <input class="kt-input kt-input-ghost" id="home_search" name="query" placeholder="Tap to start search" type="text" value="">
+</div>
           <div class="kt-toggle-group" data-kt-tabs="true">
            <a class="kt-btn kt-btn-icon active" data-kt-tab-toggle="#projects_cards" href="#">
             <i class="ki-filled ki-category">
@@ -25,46 +43,72 @@
          <div id="projects_cards">
           <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
             {% for home in homes %}
-                <div class="kt-card p-7.5">
-                    
-                    <div class="flex flex-col mb-3 lg:mb-6">
-                    <a class="text-lg font-media/brand text-mono hover:text-primary mb-px" href="#">
-                    {{home.name}}
+                <div class="kt-card home-item">
+                    <div class="kt-card-content grid gap-7 py-7.5">
+                    <div class="grid place-items-center gap-4">
+                    <div class="flex justify-center items-center size-14 rounded-full ring-1 ring-input bg-accent/60">
+                    <i class="ki-filled ki-ghost text-2xl text-muted-foreground">
+                    </i>
+                    </div>
+                    <div class="grid place-items-center">
+                    <a class="text-base font-medium text-mono hover:text-primary mb-px" href="#">
+                        {{ home.name }}
                     </a>
-                    <span class="text-sm text-secondary-foreground">
-                    {{home.owner}}
+                    <span class="text-sm text-secondary-foreground text-center">
+                        {{ home.owner }}
                     </span>
                     </div>
-                    <div class="flex items-center gap-5 mb-3.5 lg:mb-7">
-                    <span class="text-sm text-secondary-foreground">
-                    Start:
-                    <span class="text-sm font-medium text-foreground">
-                    Mar 06
-                    </span>
-                    </span>
-                    <span class="text-sm text-secondary-foreground">
-                    End:
-                    <span class="text-sm font-medium text-foreground">
-                    Dec 21
-                    </span>
-                    </span>
                     </div>
-                    <div class="kt-progress h-1.5 kt-progress-primary mb-4 lg:mb-8">
-                    <div class="kt-progress-indicator" style="width: 55%">
+                    <div class="grid">
+                    <div class="flex items-center justify-between flex-wrap mb-3.5 gap-2">
+                    <span class="text-xs text-secondary-foreground uppercase">
+                        House Number/Squad
+                    </span>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="kt-badge kt-badge-outline">
+                        {{ home.number }}
+                        </span>
+                        <span class="kt-badge kt-badge-outline">
+                        {{ home.squad.name }}
+                        </span>
                     </div>
                     </div>
+                    <div class="border-t border-input border-dashed">
+                    </div>
+                    <div class="flex items-center justify-between flex-wrap my-2.5 gap-2">
+                    <span class="text-xs text-secondary-foreground uppercase">
+                        Members
+                    </span>
+                    <div class="kt-rating">
+                        <span class="kt-badge kt-badge-outline">
+                        {{ home.members.count }} Members
+                        </span>
+                    </div>
+                    </div>
+                    <div class="border-t border-input border-dashed mb-3.5">
+                    </div>
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-xs text-secondary-foreground uppercase">
+                        memebers
+                    </span>
                     <div class="flex -space-x-2">
-                    <div class="flex">
-                    <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-4.png' %}"/>
+                        {% for member in home.members.all %}
+                            <div class="flex">
+                                <span class="relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-7 text-white ring-background bg-green-500 kt-tooltip kt-tooltip-light" data-kt-tooltip-content="true" data-kt-tooltip-placement="top" title="{{ member.full_name }}">
+                                {{ member.full_name|slice:":1" }}
+                                </span>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="flex">
-                    <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-2.png' %}"/>
                     </div>
-                    <div class="flex">
-                    <span class="hover:z-5 relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-[30px] text-primary-foreground ring-background bg-primary">
-                    S
-                    </span>
                     </div>
+                    </div>
+                    <div class="kt-card-footer justify-center">
+                    <a class="kt-btn kt-btn-outline">
+                    <i class="ki-filled ki-check-circle">
+                    </i>
+                    Add Member
+                    </a>
                     </div>
                 </div>
             {% endfor %}
@@ -75,102 +119,93 @@
          <div class="hidden" id="projects_list">
           <div class="flex flex-col gap-5 lg:gap-7.5">
             {% for home in homes %}
-                <div class="kt-card p-7">
-                    <div class="flex items-center flex-wrap justify-between gap-5">
-                    <div class="flex items-center gap-3.5">
-                    <div class="flex items-center justify-center size-14 shrink-0 rounded-lg bg-accent/60">
-                    <img alt="" class="" src="{% static 'media/brand-logos/plurk.svg' %}">
-                    </img>
+                <div class="kt-card p-7.5">
+                    <div class="flex flex-wrap justify-between items-center gap-7">
+                    <div class="flex items-center gap-4">
+                    <div class="flex justify-center items-center size-14 shrink-0 rounded-full ring-1 ring-input bg-accent/60">
+                    <i class="ki-filled ki-ghost text-2xl text-muted-foreground">
+                    </i>
                     </div>
-                    <div class="flex flex-col">
-                    <a class="text-lg font-media/brand text-mono hover:text-primary mb-px" href="#">
-                        Phoenix SaaS
+                    <div class="grid grid-col gap-1">
+                    <a class="text-base font-medium text-mono hover:text-primary mb-px" href="#">
+                        {{ home.name }}
                     </a>
                     <span class="text-sm text-secondary-foreground">
-                        Real-time photo sharing app
+                        {{ home.owner }}
                     </span>
                     </div>
                     </div>
-                    <div class="flex items-center flex-wrap gap-5 lg:gap-20">
-                    <div class="flex items-center flex-wrap gap-5 lg:gap-14">
-                    <span class="kt-badge kt-badge-primary kt-badge-outline">
-                        In Progress
+                    <div class="flex flex-wrap items-center gap-6 lg:gap-12">
+                    <div class="grid gap-5 justify-end lg:text-end">
+                    <span class="text-xs text-secondary-foreground uppercase">
+                        skills
                     </span>
-                    <div class="kt-progress h-1.5 w-36 kt-progress-primary">
-                        <div class="kt-progress-indicator" style="width: 55%">
-                        </div>
-                    </div>
-                    </div>
-                    <div class="flex items-center gap-5 lg:gap-14">
-                    <div class="flex justify-end w-24">
-                        <div class="flex -space-x-2">
-                        <div class="flex">
-                        <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-4.png' %}"/>
-                        </div>
-                        <div class="flex">
-                        <img class="hover:z-5 relative shrink-0 rounded-full ring-1 ring-background size-[30px]" src="{% static 'media/avatars/300-2.png' %}"/>
-                        </div>
-                        <div class="flex">
-                        <span class="hover:z-5 relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-[30px] text-primary-foreground ring-background bg-primary">
-                        S
+                    <div class="flex gap-1.5">
+                        <span class="kt-badge kt-badge-outline">
+                        Ul
                         </span>
-                        </div>
-                        </div>
+                        <span class="kt-badge kt-badge-outline">
+                        DevOps
+                        </span>
                     </div>
-                    <div class="kt-menu" data-kt-menu="true">
-                        <div class="kt-menu-item" data-kt-menu-item-offset="0, 10px" data-kt-menu-item-placement="bottom-end" data-kt-menu-item-toggle="dropdown" data-kt-menu-item-trigger="click">
-                        <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
-                        <i class="ki-filled ki-dots-vertical text-lg">
+                    </div>
+                    <div class="grid justify-end gap-6 lg:text-end">
+                    <div class="text-xs text-secondary-foreground uppercase">
+                        rating
+                    </div>
+                    <div class="kt-rating">
+                        <div class="kt-rating-label checked">
+                        <i class="kt-rating-on ki-solid ki-star text-base leading-none">
                         </i>
-                        </button>
-                        <div class="kt-menu-dropdown kt-menu-default w-full max-w-[200px]" data-kt-menu-dismiss="true">
-                        <div class="kt-menu-item">
-                        <a class="kt-menu-link" href="html/demo8/account/home/settings-enterprise.html">
-                            <span class="kt-menu-icon">
-                            <i class="ki-filled ki-setting-3">
-                            </i>
-                            </span>
-                            <span class="kt-menu-title">
-                            Settings
-                            </span>
-                        </a>
+                        <i class="kt-rating-off ki-outline ki-star text-base leading-none">
+                        </i>
                         </div>
-                        <div class="kt-menu-item">
-                        <a class="kt-menu-link" href="html/demo8/account/members/import-members.html">
-                            <span class="kt-menu-icon">
-                            <i class="ki-filled ki-some-files">
-                            </i>
-                            </span>
-                            <span class="kt-menu-title">
-                            Import
-                            </span>
-                        </a>
+                        <div class="kt-rating-label checked">
+                        <i class="kt-rating-on ki-solid ki-star text-base leading-none">
+                        </i>
+                        <i class="kt-rating-off ki-outline ki-star text-base leading-none">
+                        </i>
                         </div>
-                        <div class="kt-menu-item">
-                        <a class="kt-menu-link" href="html/demo8/account/activity.html">
-                            <span class="kt-menu-icon">
-                            <i class="ki-filled ki-cloud-change">
-                            </i>
-                            </span>
-                            <span class="kt-menu-title">
-                            Activity
-                            </span>
-                        </a>
+                        <div class="kt-rating-label checked">
+                        <i class="kt-rating-on ki-solid ki-star text-base leading-none">
+                        </i>
+                        <i class="kt-rating-off ki-outline ki-star text-base leading-none">
+                        </i>
                         </div>
-                        <div class="kt-menu-item">
-                        <a class="kt-menu-link" data-kt-modal-toggle="#report_user_modal" href="#">
-                            <span class="kt-menu-icon">
-                            <i class="ki-filled ki-dislike">
-                            </i>
-                            </span>
-                            <span class="kt-menu-title">
-                            Report
-                            </span>
-                        </a>
+                        <div class="kt-rating-label checked">
+                        <i class="kt-rating-on ki-solid ki-star text-base leading-none">
+                        </i>
+                        <i class="kt-rating-off ki-outline ki-star text-base leading-none">
+                        </i>
                         </div>
-                        </div>
+                        <div class="kt-rating-label checked">
+                        <i class="kt-rating-on ki-solid ki-star text-base leading-none">
+                        </i>
+                        <i class="kt-rating-off ki-outline ki-star text-base leading-none">
+                        </i>
                         </div>
                     </div>
+                    </div>
+                    <div class="grid justify-end gap-3.5 lg:text-end lg:min-w-24 shrink-0 max-w-auto">
+                    <span class="text-xs text-secondary-foreground uppercase">
+                        memebers
+                    </span>
+                    <div class="flex -space-x-2">
+                        {% for member in home.members.all %}
+                            <div class="flex">
+                                <span class="relative inline-flex items-center justify-center shrink-0 rounded-full ring-1 font-semibold leading-none text-2xs size-7 text-white ring-background bg-green-500 kt-tooltip kt-tooltip-light" data-kt-tooltip-content="true" data-kt-tooltip-placement="top" title="{{ member.full_name }}">
+                                {{ member.full_name|slice:":1" }}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                    <div class="grid justify-end min-w-20">
+                    <a class="kt-btn kt-btn-outline">
+                        <i class="ki-filled ki-check-circle">
+                        </i>
+                        Joined
+                    </a>
                     </div>
                     </div>
                     </div>
@@ -182,4 +217,68 @@
         </div>
         <!-- end: projects -->
        </div>
+
+<div class="kt-modal" data-kt-modal="true" id="bulkmodal">
+    <div class="kt-modal-content max-w-[300px] top-[10%]">
+      <div class="kt-modal-header">
+        <h3 class="kt-modal-title">Modal Title</h3>
+        <button
+          type="button"
+          class="kt-modal-close"
+          aria-label="Close modal"
+          data-kt-modal-dismiss="#modal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-x"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="kt-modal-body">
+        <form class="flex flex-col gap-5" action="/upload/home/_bulk/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <input type="file" class="kt-input" name="file" />
+            <button type="submit" class="kt-btn kt-btn-primary w-full">Upload</button>
+            <div class="rounded-lg bg-muted w-full grow mt-5 h-[175px]"></div>
+        </form>
+    </div>
+  </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('home_search');
+        
+        searchInput.addEventListener('input', function (e) {
+            input = e.target.value;
+            const searchTerm = input.toLowerCase();
+            const homes = document.querySelectorAll('.home-item');
+            
+            console.log('Search input changed:', searchTerm);
+            homes.forEach(home => {
+                // Get text from Name, Owner, and House Number for a thorough search
+                const textContent = home.innerText.toLowerCase();
+                
+                if (textContent.includes(searchTerm)) {
+                    home.classList.remove('hidden');
+                    // If it's the list view, we need to ensure we don't conflict 
+                    // with the parent "hidden" state, but usually, just removing hidden works.
+                    home.style.display = ''; 
+                } else {
+                    home.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_r+vosc5qe$v8+69ps@39=vbb4jm60rl0y-b0x#6qzpmy(tfqy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -131,7 +131,7 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-LOGIN_URL = '/signin/'
+LOGIN_URL = '/'
 
 LOGIN_REDIRECT_URL = '/home/'
 
@@ -140,3 +140,5 @@ SESSION_COOKIE_AGE = 1200
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SESSION_SAVE_EVERY_REQUEST = True
+
+DJANGO_SQIDS_MIN_LENGTH = 8
