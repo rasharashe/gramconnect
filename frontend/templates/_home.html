@@ -7,7 +7,7 @@
          <!-- begin: toolbar -->
          <div class="flex flex-wrap items-center gap-5 justify-between">
           <h3 class="text-lg text-mono font-semibold">
-            {{count}} houses
+            {{ homes|length }} houses
           </h3>
           {% if request.user.is_superuser %}
             <button class="kt-btn kt-btn-primary" data-kt-modal-toggle="#bulkmodal">
@@ -68,6 +68,7 @@
                         <span class="kt-badge kt-badge-outline">
                         {{ home.number }}
                         </span>
+                        /
                         <span class="kt-badge kt-badge-outline">
                         {{ home.squad.name }}
                         </span>

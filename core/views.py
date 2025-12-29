@@ -22,10 +22,12 @@ class HomeList(LoginRequiredMixin, ListView):
     context_object_name = 'homes'
     template_name = '_home.html'
 
+    def get_queryset(self):
+        return Home.objects.select_related('squad').prefetch_related('members').all()
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['count'] = context['homes'].count()
         context['sidebar'] = GetSidebarContext.get_context(self.request)
         return context
     
@@ -39,13 +41,12 @@ class SquadList(LoginRequiredMixin, ListView):
         sqid = self.kwargs.get('sqid')
         squad = Squad.objects.get(sqid=sqid)
         if squad:
-            return Home.objects.filter(squad=squad)
+            return Home.objects.select_related('squad').filter(squad=squad).prefetch_related('members')
         return Home.objects.none()
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['count'] = context['homes'].count()
         context['sidebar'] = GetSidebarContext.get_context(self.request)
         return context
     
