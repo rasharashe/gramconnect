@@ -1,0 +1,211 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<div class="kt-container-fixed">
+        <!-- begin: grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-7.5">
+                <div class="col-span-1 lg:col-span-3">
+                <div class="kt-card">
+                <div class="kt-card-content">
+                <div class="flex lg:px-10 py-1.5 gap-2">
+                <div class="grid grid-cols-1 place-content-center flex-1 gap-1 text-center">
+                <span class="text-mono text-2xl lg:text-2xl leading-none font-semibold">
+                {{homes|length}}
+                </span>
+                <span class="text-secondary-foreground text-sm">
+                Homes
+                </span>
+                </div>
+                <span class="not-last:border-e border-e-input my-1">
+                </span>
+                <div class="grid grid-cols-1 place-content-center flex-1 gap-1 text-center">
+                <span class="text-mono text-2xl lg:text-2xl leading-none font-semibold">
+                {{squads|length}}
+                </span>
+                <span class="text-secondary-foreground text-sm">
+                Squads
+                </span>
+                </div>
+                <span class="not-last:border-e border-e-input my-1">
+                </span>
+                <div class="grid grid-cols-1 place-content-center flex-1 gap-1 text-center">
+                <span class="text-mono text-2xl lg:text-2xl leading-none font-semibold">
+                {{members_count}}
+                </span>
+                <span class="text-secondary-foreground text-sm">
+                Members
+                </span>
+                </div>
+                <span class="not-last:border-e border-e-input my-1">
+                </span>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div class="col-span-1 lg:col-span-2">
+                <div class="flex flex-col gap-5 lg:gap-7.5">
+                <!-- End of Projects Table -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-5 lg:gap-7.5">
+                <div class="kt-card">
+                <div class="kt-card-header gap-2">
+                <h3 class="kt-card-title">
+                Top Contributors
+                </h3>
+                <div class="kt-menu" data-kt-menu="true">
+                <div class="kt-menu-item" data-kt-menu-item-offset="0, 10px" data-kt-menu-item-placement="bottom-end" data-kt-menu-item-placement-rtl="bottom-start" data-kt-menu-item-toggle="dropdown" data-kt-menu-item-trigger="click">
+                <button class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
+                        <i class="ki-filled ki-dots-vertical text-lg">
+                        </i>
+                </button>
+                </div>
+                </div>
+                </div>
+                <!-- put a fixed height and then scroll  -->
+
+                <div class="kt-card-content">
+                <div class="flex flex-col gap-2 lg:gap-5">
+                        <!-- limit to 4 -->
+                {% for squad,data in squads.items %}
+                        {% if forloop.counter <= 5 %}
+                                <div class="flex items-center gap-2">
+                                <div class="flex items-center grow gap-2.5">
+                                        <!-- <img alt="" class="rounded-full size-9 shrink-0" src="assets/media/avatars/300-3.png"> -->
+                                        <div class="flex flex-col">
+                                        <a class="text-sm font-medium text-mono hover:text-primary mb-px" href="#">
+                                        {{squad}}
+                                        </a>
+                                        <span class="text-xs text-secondary-foreground">
+                                        {{data.members_count}} members
+                                        </span>
+                                        </div>
+                                        </img>
+                                </div>
+                                <button class="kt-btn kt-btn-sm kt-btn-icon kt-btn-primary kt-btn-outline rounded-full">
+                                        <i class="ki-filled ki-plus">
+                                        </i>
+                                </button>
+                                </div>
+                        {% endif %}
+                {% endfor  %}
+                </div>
+                </div>
+                </div>
+                <div class="kt-card">
+                <div class="kt-card-header">
+                <h3 class="kt-card-title">
+                Homes by Squad
+                </h3>
+                </div>
+                <div class="kt-card-content flex justify-center items-center px-3 py-1">
+                <div id="home_chart">
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                {% for squad, data in squads.items %}
+                <div class="col-span-1">
+                <div class="flex flex-col gap-5 lg:gap-7.5">
+                <div class="kt-card">
+                <div class="kt-card-header">
+                <h3 class="kt-card-title">
+                {{squad}}
+                </h3>
+                </div>
+                <div class="kt-card-content pt-3.5 pb-3.5">
+                <table class="kt-table-auto">
+                <tbody>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        Homes:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        {{data.homes_count}}
+                        </td>
+                </tr>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        Members:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        {{data.members_count}}
+                        </td>
+                </tr>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        Status:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        <span class="kt-badge kt-badge-sm kt-badge-success kt-badge-outline">
+                        Subscribed
+                        </span>
+                        </td>
+                </tr>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        Area:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        Worldwide
+                        </td>
+                </tr>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        CEO:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        <a class="kt-link" href="#">
+                        Luis von Ahn
+                        </a>
+                        </td>
+                </tr>
+                <tr>
+                        <td class="text-sm text-secondary-foreground pb-3 pe-4 lg:pe-10">
+                        Sector:
+                        </td>
+                        <td class="text-sm ext-mono pb-3">
+                        Online Education
+                        </td>
+                </tr>
+                </tbody>
+                </table>
+                </div>
+                </div>
+                </div>
+                </div>
+        {% endfor %}
+        </div>
+        <!-- end: grid -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script type="text/javascript">
+        homeChart();
+        function homeChart() {
+                var labels = '{{graph_data.squad_names}}'.replace(/&#x27;/g, "")
+                var options = {
+                series: '{{graph_data.homes_count}}'.replace(/&#x27;/g, "").slice(1, -1).split(", ").map(Number),
+                chart: {
+                width: 380,
+                type: 'pie',
+                },
+                labels: labels.slice(1, -1).split(", "),
+                responsive: [{
+                breakpoint: 480,
+                options: {
+                chart: {
+                width: 200
+                },
+                legend: {
+                position: 'bottom'
+                }
+                }
+                }]
+                };
+
+                var chart = new ApexCharts(document.querySelector("#home_chart"), options);
+                chart.render();
+        }
+        
+</script>
+{% endblock %}
